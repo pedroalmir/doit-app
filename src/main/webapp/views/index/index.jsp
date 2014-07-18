@@ -30,6 +30,7 @@
 	    <!-- ========================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
 	    <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+	    <script src="${pageContext.request.contextPath}/js/jquery.easing.1.3.js"></script>
 	    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 	    <script src="${pageContext.request.contextPath}/js/docs.min.js"></script>
 	</head>
@@ -78,12 +79,21 @@
 								    	<input type="text" class="form-control" id="search" placeholder="What do you want?" value="Samsung Galaxy S4">
 								  	</div>
 								  	<div class="form-group">
-								  		<label for="searchengine">Search engine*</label>
-										<select multiple class="form-control" id="searchengine" name="searchengine">
-											<option>Submarino</option>
-											<option>Americanas</option>
-											<option>Ponto Frio</option>
-											<option>iByte</option>
+								  		<label for="searchEngines">Search engines*</label>
+										<select multiple class="form-control" id="searchEngines" name="searchEngines">
+											<c:choose>
+												<c:when test="${plugins != null && plugins != '[]'}">
+													<c:forEach items="${plugins}" var="plugin">
+														<option value="${plugin.uniqueKey}">${plugin.bundleName}</option>
+													</c:forEach>
+												</c:when>
+												<c:otherwise>
+													<option value="">Submarino</option>
+													<option value="">Americanas</option>
+													<option value="">Ponto Frio</option>
+													<option value="">iByte</option>
+												</c:otherwise>
+											</c:choose>
 										</select>
 									</div>
 							  	</div>
@@ -109,6 +119,44 @@
 					  		</form>
 					  	</div>
 					</div>
+					<script type="text/javascript">
+						function parseJSON(data) {
+						    return window.JSON && window.JSON.parse ? window.JSON.parse(data) : (new Function("return " + data))(); 
+						}
+						
+						function sendRequest(urlToSend, dataToSend){
+							$.ajax({
+								url: urlToSend,
+								type: 'POST',
+								data: {json: JSON.stringify(dataToSend)},
+								beforeSend: function(){
+									/* Active the loader */
+									$('#doit').button('loading');
+								}, success: function(data, textStatus, jqXHR){
+									$('#featuresPanel').show("slow","swing");
+									$('#commentsPanel').show("slow","swing");
+								}, error: function(jqXHR, textStatus, errorThrown){
+									console.log(textStatus);
+								}, complete: function(jqXHR, textStatus){
+									/* Disable the loader*/
+									$('#doit').button('reset');
+								}
+							});
+						}
+						
+						$(document).ready(function() {
+							$('#doit').click(function(){
+								var json = {
+										search: $('#search').val(),
+										searchEngines: $('#searchEngines').val(),
+										start: $('#start').val(),
+										end: $('#end').val(),
+									};
+								console.log(json);
+								sendRequest('${pageContext.request.contextPath}/plugin/execute', json);
+							});
+						});
+					</script>
       			</div>
       			<div class="col-md-7">
       				<div class="panel panel-primary">
@@ -116,24 +164,22 @@
 					    	<h3 class="panel-title">Upload a new search engine</h3>
 					  	</div>
 					  	<div class="panel-body">
-					  		<form action="">
+					  		<form action="${pageContext.request.contextPath}/plugin/save" enctype="multipart/form-data" method="post">
 					  			<div class="col-sm-12">
 						  			<div class="form-group">
-								    	<label for="name">Name</label>
-								    	<input type="text" class="form-control" id="name" name="name" placeholder="Enter with the name">
+								    	<label for="pluginName">Name*</label>
+								    	<input type="text" class="form-control" id="pluginName" name="pluginName" placeholder="Enter with the name">
 								  	</div>
 								  	<div class="form-group">
-								    	<label for="description">Description</label>
-								    	<textarea class="form-control" rows="4" id="description" name="description" placeholder="Enter with the description"></textarea>
+								    	<label for="pluginDescription">Description</label>
+								    	<textarea class="form-control" rows="4" id="pluginDescription" name="pluginDescription" placeholder="Enter with the description"></textarea>
 								  	</div>
 								  	<div class="form-group">
-								  		<label for="file">File input</label>
-								  		<input type="file" id="file" name="file">
+								  		<label for="pluginFile">File input*</label>
+								  		<input type="file" id="pluginFile" name="pluginFile">
 								  	</div>
 								  	<div class="form-group">
-										<button id="doit" type="button" class="btn btn-primary pull-right" style="width: 100%">
-											Upload
-										</button>
+								  		<input type="submit" id="upload" class="btn btn-primary pull-right" style="width: 100%" value="Upload">
 									</div>
 							  	</div>
 					  		</form>
@@ -143,7 +189,7 @@
       		</div>
       		<div class="row">
       			<div class="col-sm-5">
-					<div class="panel panel-default">
+					<div id="featuresPanel" class="panel panel-default" style="display: none;">
 						<div class="panel-heading">
 							<h3 class="panel-title"><strong>Features</strong></h3>
 						</div>
@@ -179,7 +225,7 @@
 					</div>
 				</div>
       			<div class="col-sm-7">
-      				<div class="panel panel-default">
+      				<div id="commentsPanel" class="panel panel-default" style="display: none;">
 						<div class="panel-heading">
 							<h3 class="panel-title"><strong>Comments</strong></h3>
 						</div>

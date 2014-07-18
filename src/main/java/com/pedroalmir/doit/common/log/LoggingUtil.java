@@ -49,8 +49,6 @@ public class LoggingUtil {
 		if (lastAddedIndex != msg.length()) {
 			sb.append(msg.substring(lastAddedIndex));
 		}
-
 		return sb.toString();
 	}
-
 }
