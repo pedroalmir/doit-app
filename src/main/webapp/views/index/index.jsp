@@ -1,411 +1,224 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html lang="pt">
+<%@ page contentType="text/html;charset=UTF-8" language="java"
+	pageEncoding="UTF-8"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
+<!doctype html>
+<html>
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    	<meta name="author" content="Pedro Almir">
-    	<meta name="description" content="Athena Project">
-		
-		<link rel="shortcut icon" href="http://www.caelum.com.br/favicon.ico" type="image/x-icon">
-		
-		<!-- Le styles -->
-    	<link href="${pageContext.request.contextPath}/css/bootstrap.css" rel="stylesheet">
-    	<link href="${pageContext.request.contextPath}/css/bootstrap-responsive.css" rel="stylesheet">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
     	
-		<title>Athena Plugin API</title>
-		
-		<style>
-		    /* GLOBAL STYLES
-		    -------------------------------------------------- */
-		    /* Padding below the footer and lighter body text */
-		
-		    body {
-		      padding-bottom: 40px;
-		      color: #5a5a5a;
-		    }
-		
-		    /* CUSTOMIZE THE NAVBAR
-		    -------------------------------------------------- */
-		
-		    /* Special class on .container surrounding .navbar, used for positioning it into place. */
-		    .navbar-wrapper {
-		      position: absolute;
-		      top: 0;
-		      left: 0;
-		      right: 0;
-		      z-index: 10;
-		      margin-top: 20px;
-		      margin-bottom: -90px; /* Negative margin to pull up carousel. 90px is roughly margins and height of navbar. */
-		    }
-		    .navbar-wrapper .navbar {
-		
-		    }
-		
-		    /* Remove border and change up box shadow for more contrast */
-		    .navbar .navbar-inner {
-		      border: 0;
-		      -webkit-box-shadow: 0 2px 10px rgba(0,0,0,.25);
-		         -moz-box-shadow: 0 2px 10px rgba(0,0,0,.25);
-		              box-shadow: 0 2px 10px rgba(0,0,0,.25);
-		    }
-		
-		    /* Downsize the brand/project name a bit */
-		    .navbar .brand {
-		      padding: 14px 20px 16px; /* Increase vertical padding to match navbar links */
-		      font-size: 16px;
-		      font-weight: bold;
-		      text-shadow: 0 -1px 0 rgba(0,0,0,.5);
-		    }
-		
-		    /* Navbar links: increase padding for taller navbar */
-		    .navbar .nav > li > a {
-		      padding: 15px 20px;
-		    }
-		
-		    /* Offset the responsive button for proper vertical alignment */
-		    .navbar .btn-navbar {
-		      margin-top: 10px;
-		    }
-		
-		    /* CUSTOMIZE THE CAROUSEL
-		    -------------------------------------------------- */
-		
-		    /* Carousel base class */
-		    .carousel {
-		      margin-bottom: 60px;
-		    }
-		
-		    .carousel .container {
-		      position: relative;
-		      z-index: 9;
-		    }
-		
-		    .carousel-control {
-		      height: 80px;
-		      margin-top: 0;
-		      font-size: 120px;
-		      text-shadow: 0 1px 1px rgba(0,0,0,.4);
-		      background-color: transparent;
-		      border: 0;
-		      z-index: 10;
-		    }
-		
-		    .carousel .item {
-		      height: 500px;
-		    }
-		    .carousel img {
-		      position: absolute;
-		      top: 0;
-		      left: 0;
-		      min-width: 100%;
-		      height: 500px;
-		    }
-		
-		    .carousel-caption {
-		      background-color: transparent;
-		      position: static;
-		      max-width: 550px;
-		      padding: 0 20px;
-		      margin-top: 200px;
-		    }
-		    .carousel-caption h1,
-		    .carousel-caption .lead {
-		      margin: 0;
-		      line-height: 1.25;
-		      color: #fff;
-		      text-shadow: 0 1px 1px rgba(0,0,0,.4);
-		    }
-		    .carousel-caption .btn {
-		      margin-top: 10px;
-		    }
-		
-		
-		
-		    /* MARKETING CONTENT
-		    -------------------------------------------------- */
-		
-		    /* Center align the text within the three columns below the carousel */
-		    .marketing .span4 {
-		      text-align: center;
-		    }
-		    .marketing h2 {
-		      font-weight: normal;
-		    }
-		    .marketing .span4 p {
-		      margin-left: 10px;
-		      margin-right: 10px;
-		    }
-		
-		
-		    /* Featurettes
-		    ------------------------- */
-		
-		    .featurette-divider {
-		      margin: 80px 0; /* Space out the Bootstrap <hr> more */
-		    }
-		    .featurette {
-		      padding-top: 120px; /* Vertically center images part 1: add padding above and below text. */
-		      overflow: hidden; /* Vertically center images part 2: clear their floats. */
-		    }
-		    .featurette-image {
-		      margin-top: -120px; /* Vertically center images part 3: negative margin up the image the same amount of the padding to center it. */
-		    }
-		
-		    /* Give some space on the sides of the floated elements so text doesn't run right into it. */
-		    .featurette-image.pull-left {
-		      margin-right: 40px;
-		    }
-		    .featurette-image.pull-right {
-		      margin-left: 40px;
-		    }
-		
-		    /* Thin out the marketing headings */
-		    .featurette-heading {
-		      font-size: 50px;
-		      font-weight: 300;
-		      line-height: 1;
-		      letter-spacing: -1px;
-		    }
-		
-		
-		
-		    /* RESPONSIVE CSS
-		    -------------------------------------------------- */
-		
-		    @media (max-width: 979px) {
-		
-		      .container.navbar-wrapper {
-		        margin-bottom: 0;
-		        width: auto;
-		      }
-		      .navbar-inner {
-		        border-radius: 0;
-		        margin: -20px 0;
-		      }
-		
-		      .carousel .item {
-		        height: 500px;
-		      }
-		      .carousel img {
-		        width: auto;
-		        height: 500px;
-		      }
-		
-		      .featurette {
-		        height: auto;
-		        padding: 0;
-		      }
-		      .featurette-image.pull-left,
-		      .featurette-image.pull-right {
-		        display: block;
-		        float: none;
-		        max-width: 40%;
-		        margin: 0 auto 20px;
-		      }
-		    }
-		
-		
-		    @media (max-width: 767px) {
-		
-		      .navbar-inner {
-		        margin: -20px;
-		      }
-		
-		      .carousel {
-		        margin-left: -20px;
-		        margin-right: -20px;
-		      }
-		      .carousel .container {
-		
-		      }
-		      .carousel .item {
-		        height: 300px;
-		      }
-		      .carousel img {
-		        height: 300px;
-		      }
-		      .carousel-caption {
-		        width: 65%;
-		        padding: 0 70px;
-		        margin-top: 100px;
-		      }
-		      .carousel-caption h1 {
-		        font-size: 30px;
-		      }
-		      .carousel-caption .lead,
-		      .carousel-caption .btn {
-		        font-size: 18px;
-		      }
-		
-		      .marketing .span4 + .span4 {
-		        margin-top: 40px;
-		      }
-		
-		      .featurette-heading {
-		        font-size: 30px;
-		      }
-		      .featurette .lead {
-		        font-size: 18px;
-		        line-height: 1.5;
-		      }
-		
-		    }
-   		</style>
+    	<meta name="author" content="Pedro Almir">
+    	<meta name="description" content="Doit application">
+    	<link rel="shortcut icon" href="${pageContext.request.contextPath}/img/favicon.ico">
+    	
+		<!-- Bootstrap core CSS -->
+	    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
+	    <!-- Custom styles for this template -->
+	    <link href="${pageContext.request.contextPath}/css/sticky-footer-navbar.css" rel="stylesheet">
+	
+	    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	    <!--[if lt IE 9]>
+	      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	    
+	    <!-- ========================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+	    <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+	    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+	    <script src="${pageContext.request.contextPath}/js/docs.min.js"></script>
 	</head>
 	<body>
-		<!-- NAVBAR
-    ================================================== -->
-    <div class="navbar-wrapper">
-      <!-- Wrap the .navbar in .container to center it within the absolutely positioned parent. -->
-      <div class="container">
-
-        <div class="navbar navbar-inverse">
-          <div class="navbar-inner">
-            <!-- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize. -->
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="brand" href="/athena">Athena</a>
-            <!-- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse. -->
-            <div class="nav-collapse collapse">
-              <ul class="nav">
-                <li class="active"><a href="/athena">Início</a></li>
-                <li><a href="#about">Sobre</a></li>
-                <li><a href="mailto:contato@pedroalmir.com">Contato</a></li>
-                <!-- Read about Bootstrap dropdowns at http://twitter.github.com/bootstrap/javascript.html#dropdowns -->
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ferramentas <b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="${pageContext.request.contextPath}/plugin">Plugin API</a></li>
-                    <li><a href="#">Simulações</a></li>
-                    <li><a href="#">Criar Sistemas</a></li>
-                    <li class="divider"></li>
-                    <li class="nav-header">Relatórios</li>
-                    <li><a href="#">Gerar relatórios</a></li>
-                    <li><a href="#">Configurações</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </div><!--/.nav-collapse -->
-          </div><!-- /.navbar-inner -->
-        </div><!-- /.navbar -->
-
-      </div> <!-- /.container -->
-    </div><!-- /.navbar-wrapper -->
-
-
-
-    <!-- Carousel
-    ================================================== -->
-    <div id="myCarousel" class="carousel slide" style="margin-bottom: 30px;">
-      <div class="carousel-inner">
-        <div class="item active">
-          <img src="${pageContext.request.contextPath}/img/examples/slide-01.jpg" alt="">
-          <div class="container">
-            <div class="carousel-caption">
-              <h1>Inteligência Computacional</h1>
-              <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-              <a class="btn btn-large btn-primary" href="#">Cadastre-se</a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <img src="${pageContext.request.contextPath}/img/examples/slide-02.jpg" alt="">
-          <div class="container">
-            <div class="carousel-caption">
-              <h1>Computação nas Nuvens</h1>
-              <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-              <a class="btn btn-large btn-primary" href="#">Leia mais</a>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <img src="${pageContext.request.contextPath}/img/examples/slide-03.jpg" alt="">
-          <div class="container">
-            <div class="carousel-caption">
-              <h1>Modularização</h1>
-              <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-              <a class="btn btn-large btn-primary" href="#">Exemplos</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-      <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
-    </div><!-- /.carousel -->
-
-
-
-    <!-- Marketing messaging and featurettes
-    ================================================== -->
-    <!-- Wrap the rest of the page in another container to center all the content. -->
-
-    <div class="container marketing">
-
-      <!-- Three columns of text below the carousel -->
-      <div class="row">
-        <div class="span4">
-          	<img class="img-rounded" src="${pageContext.request.contextPath}/img/home/ia.jpg" style="width: 210px;">
-          	<h2 style="font-size: 22px !important;">Inteligência Computacional</h2>
-          	<p>A ferramenta Athena irá permitir a criação de sistemas de inteligência computacional hibrídos, com o intuito de unir as diferentes
-          	áreas da Inteligência Artificial.</p>
-          	<p><a class="btn" href="#">View details &raquo;</a></p>
-        </div><!-- /.span4 -->
-        <div class="span4">
-          <img class="img-rounded" src="${pageContext.request.contextPath}/img/home/cloud-computing.png" style="width: 250px;">
-          <h2 style="font-size: 22px !important;">Computação nas Nuvens</h2>
-          <p>Athena foi desenhana como um serviço a ser disponibilizado na Web, utilizando os benefícios da Computação em Nuvens.</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div><!-- /.span4 -->
-        <div class="span4">
-          <img class="img-rounded" src="${pageContext.request.contextPath}/img/home/modulo.png" style="width: 195px;">
-          <h2 style="font-size: 22px !important;">Modularização</h2>
-          <p>Os usuários poderão criar seus próprios módulos (algoritmos) a serem incorporados à ferramenta de maneira
-          simples e prática.</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div><!-- /.span4 -->
-      </div><!-- /.row -->
-
-		<hr/>
-
-      <!-- FOOTER -->
-      <footer>
-        <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>Athena &copy; 2013 &middot; <a href="http://pedroalmir.com/#profile">Pedro Almir</a></p>
-      </footer>
-
-    </div><!-- /.container -->
-
-
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="${pageContext.request.contextPath}/js/jquery.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-transition.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-alert.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-modal.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-dropdown.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-scrollspy.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-tab.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-tooltip.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-popover.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-button.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-collapse.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-carousel.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-typeahead.js"></script>
-    <script>
-      !function ($) {
-        $(function(){
-          // carousel demo
-          $('#myCarousel').carousel()
-        })
-      }(window.jQuery)
-    </script>
-    <script src="${pageContext.request.contextPath}/js/holder/holder.js"></script>
+		<!-- Fixed navbar -->
+    	<div class="navbar navbar-default navbar-fixed-top">
+      		<div class="container">
+        		<div class="navbar-header">
+          			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	           			<span class="sr-only">Toggle navigation</span>
+	            		<span class="icon-bar"></span>
+	            		<span class="icon-bar"></span>
+	            		<span class="icon-bar"></span>
+          			</button>
+          			<a class="navbar-brand" href="${pageContext.request.contextPath}/">DoIt Application</a>
+        		</div>
+        		<div class="collapse navbar-collapse">
+          			<ul class="nav navbar-nav">
+            			<li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
+            			<li><a href="http://github.com/pedroalmir/doit-app">Git Repository</a></li>
+            			<li><a href="mailto:petrus.cc@gmail.com">Contact</a></li>
+          			</ul>
+        		</div><!--/.nav-collapse -->
+      		</div>
+    	</div>
+    	<!-- Begin page content -->
+    	<div class="container">
+      		<div class="page-header" style="margin: 0px 0 20px;">
+        		<h2>DoIt application</h2>
+      		</div>
+      		<p class="lead text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+      		Fusce quis tellus metus. Aliquam id ligula at erat consequat hendrerit. Nulla facilisi. 
+      		Maecenas vitae elit ut turpis egestas tempor. Praesent imperdiet rhoncus purus quis sagittis. 
+      		Nulla ultricies eros id augue dictum tincidunt. Nunc egestas aliquet fringilla.</p>
+      		<div class="row">
+      			<div class="col-md-5">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+					    	<h3 class="panel-title">Search</h3>
+					  	</div>
+					  	<div class="panel-body">
+					  		<form action="">
+					  			<div class="col-sm-12">
+						  			<div class="form-group">
+								    	<label for="search">Name*</label>
+								    	<input type="text" class="form-control" id="search" placeholder="What do you want?" value="Samsung Galaxy S4">
+								  	</div>
+								  	<div class="form-group">
+								  		<label for="searchengine">Search engine*</label>
+										<select multiple class="form-control" id="searchengine" name="searchengine">
+											<option>Submarino</option>
+											<option>Americanas</option>
+											<option>Ponto Frio</option>
+											<option>iByte</option>
+										</select>
+									</div>
+							  	</div>
+						  		<div class="col-sm-6">
+						  			<div class="form-group">
+							    		<label for="start">Start</label>
+							    		<input type="date" class="form-control" id="start">
+							    	</div>
+						  		</div>
+							  	<div class="col-sm-6">
+						  			<div class="form-group">
+							    		<label for="end">End</label>
+							    		<input type="date" class="form-control" id="end">
+							    	</div>
+						  		</div>
+						  		<div class="col-sm-12">
+						  			<div class="form-group">
+										<button id="doit" type="button" class="btn btn-success pull-right" style="width: 100%">
+											DoIt !
+										</button>
+									</div>
+						  		</div>
+					  		</form>
+					  	</div>
+					</div>
+      			</div>
+      			<div class="col-md-7">
+      				<div class="panel panel-primary">
+						<div class="panel-heading">
+					    	<h3 class="panel-title">Upload a new search engine</h3>
+					  	</div>
+					  	<div class="panel-body">
+					  		<form action="">
+					  			<div class="col-sm-12">
+						  			<div class="form-group">
+								    	<label for="name">Name</label>
+								    	<input type="text" class="form-control" id="name" name="name" placeholder="Enter with the name">
+								  	</div>
+								  	<div class="form-group">
+								    	<label for="description">Description</label>
+								    	<textarea class="form-control" rows="4" id="description" name="description" placeholder="Enter with the description"></textarea>
+								  	</div>
+								  	<div class="form-group">
+								  		<label for="file">File input</label>
+								  		<input type="file" id="file" name="file">
+								  	</div>
+								  	<div class="form-group">
+										<button id="doit" type="button" class="btn btn-primary pull-right" style="width: 100%">
+											Upload
+										</button>
+									</div>
+							  	</div>
+					  		</form>
+					  	</div>
+					</div>
+      			</div>
+      		</div>
+      		<div class="row">
+      			<div class="col-sm-5">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><strong>Features</strong></h3>
+						</div>
+						<div class="panel-body">
+							<table class="table table-bordered">
+								<caption><p><strong>Samsung Galaxy S4</strong></p></caption>
+					      		<thead>
+					        		<tr>
+					          			<th class="col-sm-1">#</th>
+					          			<th class="col-sm-6">Feature</th>
+					          			<th class="col-sm-4">Quality</th>
+					        		</tr>
+					      		</thead>
+      							<tbody>
+        							<tr>
+          								<td>1</td>
+          								<td>Tela</td>
+          								<td><input type="range" value="90" disabled="disabled"></td>
+        							</tr>
+        							<tr>
+          								<td>2</td>
+          								<td>Bateria</td>
+          								<td><input type="range" value="40" disabled="disabled"></td>
+        							</tr>
+        							<tr>
+          								<td>3</td>
+          								<td>Memória Interna</td>
+          								<td><input type="range" value="50" disabled="disabled"></td>
+        							</tr>
+						      	</tbody>
+						    </table>
+						</div>
+					</div>
+				</div>
+      			<div class="col-sm-7">
+      				<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><strong>Comments</strong></h3>
+						</div>
+						<div class="panel-body">
+							<table class="table table-bordered">
+					      		<thead>
+					        		<tr>
+					          			<th class="col-sm-1">#</th>
+					          			<th class="col-sm-8">Comment</th>
+					          			<th class="col-sm-1">Options</th>
+					        		</tr>
+					      		</thead>
+      							<tbody>
+        							<tr class="success">
+          								<td>1</td>
+          								<td>A Tela do Samsung S4 é muito boa...</td>
+          								<td><button type="button" class="btn btn-primary btn-xs" style="width: 100%"><span class="glyphicon glyphicon-info-sign"></span></button></td>
+        							</tr>
+        							<tr class="danger">
+          								<td>2</td>
+          								<td>A Bateria do Samsung S4 dá muitos problemas pois...</td>
+          								<td><button type="button" class="btn btn-primary btn-xs" style="width: 100%"><span class="glyphicon glyphicon-info-sign"></span></button></td>
+        							</tr>
+        							<tr class="warning">
+          								<td>3</td>
+          								<td>O Samsung S4 tem uma Memória Interna razoável...</td>
+          								<td><button type="button" class="btn btn-primary btn-xs" style="width: 100%"><span class="glyphicon glyphicon-info-sign"></span></button></td>
+        							</tr>
+						      	</tbody>
+						    </table>
+						</div>
+					</div>
+      			</div>
+      		</div>
+    	</div>
+    	<div id="footer">
+      		<div class="container">
+        		<p class="text-muted">Developed by <a href="http://pedroalmir.com">Pedro Almir</a> © 2014</p>
+      		</div>
+	    </div>
 	</body>
 </html>
